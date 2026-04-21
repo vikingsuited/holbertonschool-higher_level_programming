@@ -1,4 +1,7 @@
 #!/usr/bin/python3
+"""
+Flask app to display products from JSON, CSV, or SQLite.
+"""
 from flask import Flask, render_template, request
 import json
 import csv
@@ -22,14 +25,18 @@ def read_csv():
 
 def read_sql():
     products = []
-    conn = sqlite3.connect('products.db')
-    conn.row_factory = sqlite3.Row
-    cursor = conn.cursor()
-    cursor.execute('SELECT name, category, price FROM Products')
-    rows = cursor.fetchall()
-    for row in rows:
-        products.append(dict(row))
-    conn.close()
+    try:
+        conn = sqlite3.connect('products.db')
+        conn.row_factory = sqlite3.Row
+        cursor = conn.cursor()
+        # İD sütununu mütləq SELECT-ə əlavə edirik
+        cursor.execute('SELECT id, name, category, price FROM Products')
+        rows = cursor.fetchall()
+        for row in rows:
+            products.append(dict(row))
+        conn.close()
+    except sqlite3.Error:
+        pass
     return products
 
 @app.route('/products')
