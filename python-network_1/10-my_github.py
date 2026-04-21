@@ -11,14 +11,10 @@ if __name__ == "__main__":
     username = sys.argv[1]
     password = sys.argv[2]
     url = "https://api.github.com/user"
-
-    # HTTP Basic Authentication requests kitabxanası ilə
     r = requests.get(url, auth=(username, password))
-    
+
     try:
-        # Cavabı JSON formatında oxuyuruq
         user_data = r.json()
-        # Əgər giriş uğurludursa 'id' açarını, deyilsə None çap edirik
         print(user_data.get('id'))
     except ValueError:
         print("None")
